@@ -1,6 +1,7 @@
-# not sure which array methods I am allowed to use...
+# I don't fully understand the constraints on this problem.
+# I'm not sure which array methods I am allowed to use...
 # arrays uses fetch
-# reverser uses [] and <<
+# other functions use [] and <<
 class ListOps
   def self.arrays(input)
     size = 0
@@ -9,7 +10,7 @@ class ListOps
         input.fetch(size)
         size += 1
       end
-    rescue
+    rescue IndexError
       return size
     end
   end
@@ -35,7 +36,7 @@ class ListOps
     array
   end
 
-  def self.mapper(input, &block)
+  def self.mapper(input)
     return input unless block_given?
     array = []
     size = arrays(input)
@@ -45,7 +46,7 @@ class ListOps
     array
   end
 
-  def self.filterer(input, &block)
+  def self.filterer(input)
     return input unless block_given?
     array = []
     size = arrays(input)
