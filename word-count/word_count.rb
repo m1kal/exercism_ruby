@@ -1,25 +1,15 @@
 class Phrase
-  def initialize(string)
-    @string = string
+  def initialize(phrase)
+    @phrase = phrase.gsub(/((\w)'(\s))|((\s)'(\w))/, '\2\3\5\6').downcase
   end
 
   def word_count
     hash = {}
-    @string.downcase.split(/[ ,\n:!@$%^&\.]+/).each do |w|
-      hash[w.cleanup] = (hash[w.cleanup].nil? ? 0 : hash[w.cleanup]) + 1
+    @phrase.split(/[ ,\n:!@$%^&\.]+/).each do |word|
+      hash[word] = (hash[word] || 0) + 1
     end
     hash
   end
-end
-
-module Cleanup
-  def cleanup
-    chomp("'").reverse.chomp("'").reverse
-  end
-end
-
-class String
-  include Cleanup
 end
 
 module BookKeeping

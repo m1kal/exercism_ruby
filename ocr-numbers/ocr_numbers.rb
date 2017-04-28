@@ -17,24 +17,33 @@ class OCR
   end
 
   def convert
-    0.upto(@text.size - 1).collect { |group| convert_group(group) }.join(',')
+    @text.collect { |group| convert_group(group) }.join(',')
   end
 
+  private
+
   def convert_group(group)
-    0.upto(@text[group].size - 1).collect do |digit|
-      (DIGITS.index(@text[group][digit]) || '?').to_s
-    end.join
+    group.collect { |digit| (DIGITS.index(digit) || '?').to_s }.join
   end
 
   def find_digit_groups(input)
-    lines = input.split("\n")
-    0.upto(lines.size / 4 - 1).collect { |group| find_digits(lines, group) }
+    input.split("\n").each_slice(4).collect { |group| find_digits(group) }
   end
 
-  def find_digits(lines, group)
-    num_digits = lines[0].size / 3
-    0.upto(num_digits - 1).collect do |digit|
-      0.upto(3).collect { |line| lines[4 * group + line][3 * digit, 3] }.join
-    end
+  def find_digits(lines)
+    lines.map { |line| line.split('') }
+         .transpose
+         .each_slice(3)
+         .collect { |tr_digit| tr_digit.transpose.map(&:join).join }
   end
+end
+
+class OcrNumbers
+  def self.convert(input)
+    OCR.new(input).convert
+  end
+end
+
+module BookKeeping
+  VERSION = 1
 end
