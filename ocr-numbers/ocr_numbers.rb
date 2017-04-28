@@ -1,4 +1,4 @@
-class OCR
+class OcrNumbers
   DIGITS = [
     [[' _ '], ['| |'], ['|_|'], ['   ']].join,
     [['   '], ['  |'], ['  |'], ['   ']].join,
@@ -12,35 +12,29 @@ class OCR
     [[' _ '], ['|_|'], [' _|'], ['   ']].join
   ].freeze
 
-  def initialize(input)
-    @text = find_digit_groups(input)
+  def self.convert(input)
+    find_digit_groups(input).collect { |group| convert_group(group) }.join(',')
   end
 
-  def convert
-    @text.collect { |group| convert_group(group) }.join(',')
+  def self.convert_group(group)
+    group.collect { |digit| convert_digit(digit) }.join
   end
 
-  private
-
-  def convert_group(group)
-    group.collect { |digit| (DIGITS.index(digit) || '?').to_s }.join
+  def self.convert_digit(digit)
+    raise ArgumentError unless digit.length == 12
+    (DIGITS.index(digit) || '?').to_s
   end
 
-  def find_digit_groups(input)
+  def self.find_digit_groups(input)
     input.split("\n").each_slice(4).collect { |group| find_digits(group) }
   end
 
-  def find_digits(lines)
+  def self.find_digits(lines)
+    raise ArgumentError unless (lines.size % 4).zero?
     lines.map { |line| line.split('') }
          .transpose
          .each_slice(3)
          .collect { |tr_digit| tr_digit.transpose.map(&:join).join }
-  end
-end
-
-class OcrNumbers
-  def self.convert(input)
-    OCR.new(input).convert
   end
 end
 
